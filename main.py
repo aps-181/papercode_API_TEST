@@ -24,11 +24,11 @@ def gamma_correction(src, gamma):
     # A gamma = 1 has no effect.
 
 
-class HelloWorld(Resource):
+class GammaCorrection(Resource):
     def get(self):
-        return {"data": "Hello World"}
+        return {"data": "Nothing to return"}
 
-    def post(self, img):
+    def post(self):
         # with open("new1_image3.jpg", "rb") as f:
         #     image = base64.b64encode(f.read())
         image = request.form['image']
@@ -36,13 +36,11 @@ class HelloWorld(Resource):
         np_data = np.frombuffer(decoded_data, np.uint8)
         img = cv2.imdecode(np_data, cv2.IMREAD_UNCHANGED)
         img = gamma_correction(img, 3)
-        cv2.imshow("test", img)
-        cv2.waitKey(0)
         string = base64.b64encode(cv2.imencode('.jpg', img)[1]).decode()
-        return {"status": "done"}
+        return {"data": string}
 
 
-api.add_resource(HelloWorld, "/helloworld/<string:img>")
+api.add_resource(GammaCorrection, "/gammacorrection")
 
 if __name__ == '__main__':
     app.run(debug=True)
